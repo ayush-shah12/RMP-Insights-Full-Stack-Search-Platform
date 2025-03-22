@@ -188,6 +188,10 @@ def student_input(code):
 @app.route('/get_professor_info', methods=['GET'])
 @cross_origin()
 def get_professor_info():
+  
+    # temporary notification for now...
+    return jsonify({'ERROR': 651, 'MESSAGE': "⚠️Rate My Professor site changes broke the extension. A fix is in progress!⚠️", })
+
     # EXAMPLE SCHOOL_CODE: U2Nob29sLTEyMw== used for graphql
     # EXAMPLE SCHOOL_ID: 123
 
