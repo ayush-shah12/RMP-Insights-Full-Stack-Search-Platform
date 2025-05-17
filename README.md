@@ -25,11 +25,12 @@ Experience a more efficient and stress-free way to select your courses. Install 
 
 ## Screenshots
 
-![App Screenshot](https://i.postimg.cc/PJTsG9p6/harv-search.png)
+![image](https://github.com/user-attachments/assets/81ab3829-96e8-4acf-b38f-630a7fdcad6b)
 
-![App Screenshot](https://i.postimg.cc/wvKY276Y/harv-disp.png)
+![image](https://github.com/user-attachments/assets/7d1639e7-f463-4a28-ae7e-bfbe3dee6d1c)
 
-![App Screenshot](https://i.postimg.cc/PfQnbX90/sbu-search.png)
+![image](https://github.com/user-attachments/assets/a55f6a20-59cd-4177-925d-a0633532b9cb)
+
 
 ## Intallation
 
