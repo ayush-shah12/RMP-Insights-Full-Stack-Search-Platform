@@ -13,12 +13,9 @@ load_dotenv()
 
 redis_url = os.getenv("REDISCLOUD_URL")
 
-redis_instance = None
-
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    global redis_instance
-    redis_instance = await redis.from_url(
+    app.state.redis_instance = await redis.from_url(
         url=redis_url,
         encoding="utf-8", 
         decode_responses=True
@@ -26,9 +23,8 @@ async def lifespan(app: FastAPI):
     
     yield
     
-    if redis_instance:
-        await redis_instance.close()
-    redis_instance = None
+    if app.state.redis_instance:
+        await app.state.redis_instance.close()
 
 app = FastAPI(title="Rate My Professors Chrome Extension API", version="2.0.0", lifespan=lifespan)
 
@@ -48,5 +44,3 @@ async def root():
     }
     
 app.include_router(router)
-
-# redis://default:kH5y5Iykzg3AJE03wzkRRnadvO6YzyjB@redis-17404.c281.us-east-1-2.ec2.redns.redis-cloud.com:17404

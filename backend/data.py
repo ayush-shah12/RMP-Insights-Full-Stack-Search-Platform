@@ -1,13 +1,18 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Request
 from rapidfuzz import fuzz
 
 from backend.utils import get_school_id_by_code, get_prof, get_tags_comments
 from backend.models import ProfessorInfo
 
+
 router = APIRouter()
 
+
 @router.get("/get_professor_info" , response_model=ProfessorInfo)
-async def get_professor_info(prof_first_name: str | None = None, prof_last_name: str | None = None, school_code: str | None = None):
+async def get_professor_info(request: Request, prof_first_name: str | None = None, prof_last_name: str | None = None, school_code: str | None = None):
+    
+    if not request.app.state.redis_instance:
+        pass
     
     if not school_code:
         raise HTTPException(status_code=400, detail="School code is required")
