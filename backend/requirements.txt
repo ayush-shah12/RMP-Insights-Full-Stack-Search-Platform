@@ -1,7 +1,6 @@
-Flask
-flask-cors
 pandas
 requests
 beautifulsoup4
-gunicorn
 rapidfuzz
+fastapi[standard]
+uvicorn
