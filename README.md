@@ -54,7 +54,7 @@ If you have any feedback, please reach out to us at rmpextension.dev@gmail.com
 
 **Client:** HTML, CSS, JS
 
-**Server:** PYTHON, FLASK, BEAUTIFUL SOUP, REQUESTS
+**Server:** PYTHON, FASTAPI, BEAUTIFUL SOUP, REQUESTS
 
 **API:** Reverse-engineered GraphQL API
 
