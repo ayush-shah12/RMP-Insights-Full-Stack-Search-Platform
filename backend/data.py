@@ -21,10 +21,12 @@ async def get_professor_info(request: Request, prof_first_name: str | None = Non
         raise HTTPException(status_code=404, detail="School not found")
     
     redis = None
-    cache_key = f"professor_info:{school_id}:{prof_first_name.lower() if prof_first_name else ''}:{prof_last_name.lower() if prof_last_name else ''}"
     if request.app.state.redis_instance:
         redis = request.app.state.redis_instance
-        cached = await redis.get(cache_key)
+        
+        # attempt to retrieve from cache based on search params
+        search_cache_key = f"professor_info:search:{school_id}:{prof_first_name.lower() if prof_first_name else ''}:{prof_last_name.lower() if prof_last_name else ''}"
+        cached = await redis.get(search_cache_key)
         if cached:
             return ProfessorInfo(**json.loads(cached))
         
@@ -74,9 +76,35 @@ async def get_professor_info(request: Request, prof_first_name: str | None = Non
     if highest_match_score < 60:
         raise HTTPException(status_code=404, detail="No matching professor found")
     
-    # get tags and comments for best match
+    # check other caches to avoid querying for tags and comments
+    if redis:
+        # check ID-based cache
+        id_cache_key = f"professor_info:id:{best_match.legacyId}"
+        cached = await redis.get(id_cache_key)
+        if cached:
+            return ProfessorInfo(**json.loads(cached))
+        
+        # check name-based cache
+        name_cache_key = f"professor_info:name:{best_match.firstName.lower()}:{best_match.lastName.lower()}"
+        cached = await redis.get(name_cache_key)
+        if cached:
+            return ProfessorInfo(**json.loads(cached))
+    
+    # cache miss for the 2 remaining caches, get tags and comments
     best_match.tags, best_match.userCards = get_tags_comments(best_match.legacyId)
     
+    # cache everything as if we're here, the cache completely missed
     if redis:
-        await redis.set(cache_key, json.dumps(best_match.model_dump()), ex=432000)  # Cache for 5 days
+        # cache the professor by id
+        id_cache_key = f"professor_info:id:{best_match.legacyId}"
+        await redis.set(id_cache_key, json.dumps(best_match.model_dump()), ex=432000)
+        
+        # cache by search params used
+        search_cache_key = f"professor_info:search:{school_id}:{prof_first_name.lower() if prof_first_name else ''}:{prof_last_name.lower() if prof_last_name else ''}"
+        await redis.set(search_cache_key, json.dumps(best_match.model_dump()), ex=432000)
+        
+        # cache by professor name
+        name_cache_key = f"professor_info:name:{best_match.firstName.lower()}:{best_match.lastName.lower()}"
+        await redis.set(name_cache_key, json.dumps(best_match.model_dump()), ex=432000)
+        
     return best_match
