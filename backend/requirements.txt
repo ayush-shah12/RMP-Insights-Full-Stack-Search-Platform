@@ -4,3 +4,4 @@ beautifulsoup4
 rapidfuzz
 fastapi[standard]
 uvicorn
+aioredis
