@@ -5,6 +5,7 @@ import requests
 import json
 from bs4 import BeautifulSoup
 from typing import Union
+import os
 
 HEADERS = {
         'Accept': '*/*',
@@ -22,9 +23,12 @@ URL = "https://www.ratemyprofessors.com/graphql"
 
 
 def get_school_id_by_code(school_code) -> str | None:
-    data = pd.read_csv("schools.csv")
+    current_dir = os.path.dirname(__file__)
+    csv_path = os.path.join(current_dir, "schools.csv")
     
-    school_id = data.loc[data['code'] == school_code, 'id']
+    data = pd.read_csv(csv_path)
+    
+    school_id = data.loc[data['School ID'] == int(school_code), 'School Code']
     
     return school_id.iloc[0] if not school_id.empty else None
     
