@@ -11,7 +11,7 @@ import os
 
 load_dotenv()
 
-redis_url = os.getenv("REDIS_URL")
+redis_url = os.getenv("REDISCLOUD_URL")
 
 redis_instance = None
 
