@@ -52,7 +52,7 @@ jobs:
           npm run build
       - uses: vimtor/action-zip@v1.2
         with:
-          files: build/
+          files: frontend-react/build/
           dest: build.zip
       - name: Upload to Chrome Web Store
         uses: mobilefirstllc/cws-publish@latest
