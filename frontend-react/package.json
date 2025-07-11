@@ -20,7 +20,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build && npm run copy-extension-files",
-    "copy-extension-files": "copy ..\\frontend-react\\chrome\\  background.js .\\build\\background.js && copy ..\\frontend-react\\chrome\\rightClickReceiver.js .\\build\\rightClickReceiver.js && copy ..\\frontend-react\\chrome\\manifest.json .\\build\\manifest.json",
+    "copy-extension-files": "copy ..\\frontend-react\\chrome\\background.js .\\build\\background.js && copy ..\\frontend-react\\chrome\\rightClickReceiver.js .\\build\\rightClickReceiver.js && copy ..\\frontend-react\\chrome\\manifest.json .\\build\\manifest.json",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
