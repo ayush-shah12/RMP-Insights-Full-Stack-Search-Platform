@@ -1,6 +1,6 @@
 import { test, expect } from './test-setup';
 
-test.skip('Testing Basic UI (Selecting School/Autocomplete)', async ({ context, extensionId }) => {
+test('Testing Basic UI (Selecting School/Autocomplete)', async ({ context, extensionId }) => {
   const page = await context.newPage();
 
   await page.goto('chrome-extension://' + extensionId + '/popup.html');
@@ -20,7 +20,7 @@ test.skip('Testing Basic UI (Selecting School/Autocomplete)', async ({ context, 
 });
 
 
-test.skip('Testing API call + display of data', async ({ context, extensionId }) => {
+test('Testing API call + display of data', async ({ context, extensionId }) => {
     const page = await context.newPage();
   
     await page.goto('chrome-extension://' + extensionId + '/popup.html');
@@ -77,7 +77,7 @@ test.skip('Testing API call + display of data', async ({ context, extensionId })
 
   });
   
-  test.skip('Testing Error Handling/User Misinputs', async ({ context, extensionId }) => {
+  test('Testing Error Handling/User Misinputs', async ({ context, extensionId }) => {
     const page = await context.newPage();
   
     await page.goto('chrome-extension://' + extensionId + '/popup.html');
