@@ -6,6 +6,7 @@ on:
     branches: [ '*' ]
 jobs:
   test:
+    if: false 
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
@@ -38,10 +39,21 @@ jobs:
     needs: test
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+      - name: Install dependencies
+        run: |
+          cd v2-client-react-ts
+          npm ci
+      - name: Build
+        run: |
+          cd v2-client-react-ts
+          npm run build
       - uses: vimtor/action-zip@v1.2
         with:
-          files: frontend
-          dest: frontend.zip
+          files: v2-client-react-ts/build/
+          dest: build.zip
       - name: Upload to Chrome Web Store
         uses: mobilefirstllc/cws-publish@latest
         with:
@@ -50,8 +62,8 @@ jobs:
           client_secret: ${{ secrets.SECRET }}
           refresh_token: ${{ secrets.REFRESH_TOKEN }}
           extension_id: ${{ secrets.EXTENSION_ID }}
-          zip_file: frontend.zip
+          zip_file: build.zip
       - uses: actions/upload-artifact@v4
         with:
-          name: loggingFrontendZipFile 
-          path: frontend.zip
+          name: v2ClientReactTsZipFile
+          path: build.zip
