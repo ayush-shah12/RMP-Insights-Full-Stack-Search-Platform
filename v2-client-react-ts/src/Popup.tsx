@@ -71,7 +71,7 @@ const Popup: React.FC = () => {
       // TODO: fix how errors are sent from server
       const errorMessage = axios.isAxiosError(err) ? err.response?.data?.error : 'Unknown error';
       if (errorMessage.includes('No matching teacher found')){
-        setError(`Could not find professor ${firstName} ${lastName} at ${selectedSchool}.`);
+        setError(`Could not find Professor ${firstName} ${lastName} at ${selectedSchool}.`);
       } else {
         setError('Server Error: Failed to fetch professor data. Please try again.');
       }

@@ -14,7 +14,7 @@ const TagsSection: React.FC<TagsSectionProps> = ({ tags }) => {
     <div id="tags-section">
       <h3 className="tagh3">Top Tags</h3>
       <div id="tags" className="tag-container">
-        {tags.map((tag, index) => (
+        {tags.slice(0, 6).map((tag, index) => (
           <span key={index} className="tag">
             {tag.name}
           </span>
