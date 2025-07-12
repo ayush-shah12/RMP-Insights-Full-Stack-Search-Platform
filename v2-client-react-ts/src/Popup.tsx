@@ -11,6 +11,7 @@ const Popup: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isFullScreenLoading, setIsFullScreenLoading] = useState(false);
   const [selectedSchool, setSelectedSchool] = useState('');
+  const [selectedSchoolId, setSelectedSchoolId] = useState<number | null>(null);
   const [professorData, setProfessorData] = useState<Professor| null>(null);
   const [error, setError] = useState<string>('');
   const [formData, setFormData] = useState({ firstName: '', lastName: '' });
@@ -31,7 +32,7 @@ const Popup: React.FC = () => {
           });
           
           // trigger search automatically if we have a school selected
-          if (selectedSchool) {
+          if (selectedSchool && selectedSchoolId) {
             handleSearchSubmit(request.firstName || '', request.lastName || '');
           }
         }
@@ -70,6 +71,7 @@ const Popup: React.FC = () => {
       try {
         const schoolData = JSON.parse(storedSchool);
         setSelectedSchool(schoolData[0]);
+        setSelectedSchoolId(schoolData[1]);
       } catch (e) {
         console.error('Error parsing stored school data:', e);
       }
@@ -140,7 +142,7 @@ const Popup: React.FC = () => {
       return;
     }
 
-    if (!selectedSchool) {
+    if (!selectedSchool || !selectedSchoolId) {
       setError('Please select a school first');
       return;
     }
@@ -154,7 +156,8 @@ const Popup: React.FC = () => {
       const response = await axios.post(`${process.env.REACT_APP_API_URL}`, {
         firstName,
         lastName,
-        schoolId: selectedSchool
+        schoolId: selectedSchoolId,
+        schoolName: selectedSchool
       });
 
       const res = response.data;
@@ -236,6 +239,7 @@ const Popup: React.FC = () => {
 
   const handleSchoolChosen = (school: string, schoolId: number) => {
     setSelectedSchool(school);
+    setSelectedSchoolId(schoolId);
     setCurrentView('search');
     
     // Save selected school to localStorage
