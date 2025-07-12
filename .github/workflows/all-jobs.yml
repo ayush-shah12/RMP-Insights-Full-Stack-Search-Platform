@@ -17,6 +17,9 @@ jobs:
       run: |
         cd tests/e2e 
         npm ci
+        cd ../../v2-client-react-ts
+        npm ci
+        npm run build
     - name: Install Playwright Browsers
       run: |
         cd tests/e2e
@@ -29,19 +32,30 @@ jobs:
       if: always()
       with:
         name: playwright-report
-        path: playwright-report/
+        path: tests/e2e/playwright-report/
         retention-days: 30
  
   zip-files:
-    if: github.ref == 'refs/heads/master' && success() && github.event_name == 'push'
+    if: false
     runs-on: ubuntu-latest
     needs: test
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+      - name: Install dependencies
+        run: |
+          cd v2-client-react-ts
+          npm ci
+      - name: Build
+        run: |
+          cd v2-client-react-ts
+          npm run build
       - uses: vimtor/action-zip@v1.2
         with:
-          files: frontend
-          dest: frontend.zip
+          files: v2-client-react-ts/build/
+          dest: build.zip
       - name: Upload to Chrome Web Store
         uses: mobilefirstllc/cws-publish@latest
         with:
@@ -50,8 +64,8 @@ jobs:
           client_secret: ${{ secrets.SECRET }}
           refresh_token: ${{ secrets.REFRESH_TOKEN }}
           extension_id: ${{ secrets.EXTENSION_ID }}
-          zip_file: frontend.zip
+          zip_file: build.zip
       - uses: actions/upload-artifact@v4
         with:
-          name: loggingFrontendZipFile 
-          path: frontend.zip
+          name: v2ClientReactTsZipFile
+          path: build.zip

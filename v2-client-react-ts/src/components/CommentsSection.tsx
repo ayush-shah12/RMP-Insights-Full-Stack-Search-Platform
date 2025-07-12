@@ -1,0 +1,32 @@
+import React from 'react';
+import { Comment } from '../../types/types';
+
+interface CommentsSectionProps {
+  comments: Comment[];
+}
+
+const CommentsSection: React.FC<CommentsSectionProps> = ({ comments }) => {
+  if (!comments || comments.length === 0) return null;
+  return (
+    <div id="comments-section">
+      <h3>Student Comments</h3>
+      <div id="comments">
+        {comments.map((comment, index) => (
+          <div key={index} className="comment">
+            <div className="comment-header">
+              <span className="course">{comment.course}</span>
+              <span className="date">{comment.date}</span>
+            </div>
+            <div className="comment-body">{comment.comment}</div>
+            {comment.wta && <div className="comment-footer">{comment.wta}</div>}
+          </div>
+        ))}
+      </div>
+      <p className="comment-note">
+        *The number of comments shown is restricted to a maximum of 6, only the most recent are shown.*
+      </p>
+    </div>
+  );
+};
+
+export default CommentsSection; 
