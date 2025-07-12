@@ -4,18 +4,20 @@ import path from 'path';
 
 export const test = base.extend({
   context: async ({ }, use) => {
-    // Build the React extension first
     const extensionPath = path.join(__dirname, '../../v2-client-react-ts');
-    console.log('Building React extension...');
-    try {
-      execSync('npm run build', { 
-        cwd: extensionPath, 
-        stdio: 'inherit' 
-      });
-    } catch (error) {
-      console.error('Failed to build extension:', error);
-      throw error;
-    }
+
+    // build is done in the ci/cd pipeline prior to running tests
+
+    // console.log('Building React extension...');
+    // try {
+    //   execSync('npm run build', { 
+    //     cwd: extensionPath, 
+    //     stdio: 'inherit' 
+    //   });
+    // } catch (error) {
+    //   console.error('Failed to build extension:', error);
+    //   throw error;
+    // }
     
     const pathToExtension = path.join(extensionPath, 'build');
     const context = await chromium.launchPersistentContext('', {

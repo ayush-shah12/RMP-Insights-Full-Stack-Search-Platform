@@ -17,6 +17,9 @@ jobs:
       run: |
         cd tests/e2e 
         npm ci
+        cd ../../v2-client-react-ts
+        npm ci
+        npm run build
     - name: Install Playwright Browsers
       run: |
         cd tests/e2e
