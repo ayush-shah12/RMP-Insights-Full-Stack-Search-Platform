@@ -23,10 +23,13 @@ func NewProfessorHandler(redisClient *cache.RedisClient) *ProfessorHandler {
 }
 
 func (h *ProfessorHandler) GetProfessorInfo(c *fiber.Ctx) error {
-	profFirstName := c.Query("prof_first_name")
-	profLastName := c.Query("prof_last_name")
-	schoolCode := c.Query("school_code")
-	forceRefresh := c.Query("force_refresh") == "true"
+
+	// get form data from post request
+	profFirstName := c.FormValue("prof_first_name")
+	profLastName := c.FormValue("prof_last_name")
+	schoolCode := c.FormValue("school_code")
+	forceRefresh := c.FormValue("force_refresh") == "true"
+
 
 	if profFirstName == "" && profLastName == "" {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
