@@ -153,11 +153,13 @@ const Popup: React.FC = () => {
     setProfessorData(null); // clear old stats
 
     try {
+      const encoded = btoa(`school-${selectedSchoolId}`);
       const response = await axios.post(`${process.env.REACT_APP_API_URL}`, {
         firstName,
         lastName,
         schoolId: selectedSchoolId,
-        schoolName: selectedSchool
+        schoolName: selectedSchool,
+        encoded: encoded
       });
 
       const res = response.data;
