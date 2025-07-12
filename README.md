@@ -1,6 +1,9 @@
 
 # Rate My Professor Extension(Any University, Any Website)
 
+![example workflow](https://github.com/ayush-shah12/RMP-Insights-Full-Stack-Search-Platform/actions/workflows/all-jobs.yml/badge.svg)
+
+
 Tired of juggling multiple RateMyProfessors tabs while planning your courses? Our Chrome extension is here to make your life easier!
 
 With just a few clicks, you can:
