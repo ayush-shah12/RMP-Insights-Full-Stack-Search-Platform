@@ -24,10 +24,8 @@ func ConvertToWTAString(wta *int) *string {
 }
 
 func ConvertTeacherToProfessorInfo(teacher models.TeacherDetails) *models.ProfessorInfo {
-	// Convert legacy ID to string
 	legacyIdStr := strconv.Itoa(teacher.LegacyId)
 
-	// Handle potential division by zero or invalid percentage
 	var wtaPercentStr string
 	if teacher.WouldTakeAgainPercent >= 0 && teacher.WouldTakeAgainPercent <= 100 {
 		wtaPercentStr = fmt.Sprintf("%.1f", teacher.WouldTakeAgainPercent)
@@ -35,13 +33,11 @@ func ConvertTeacherToProfessorInfo(teacher models.TeacherDetails) *models.Profes
 		wtaPercentStr = "N/A"
 	}
 
-	// Convert comments
 	var userCards []models.Comment
 	for _, edge := range teacher.Ratings.Edges {
 		rating := edge.Node
 		wtaStr := ConvertToWTAString(rating.WouldTakeAgain)
 
-		// Handle empty strings
 		course := rating.Class
 		if course == "" {
 			course = "N/A"
