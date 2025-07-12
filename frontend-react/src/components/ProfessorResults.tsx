@@ -2,33 +2,18 @@ import React, { useEffect, useRef } from 'react';
 import CommentsSection from './CommentsSection';
 import TagsSection from './TagsSection';
 
-interface Comment {
-  course: string;
-  date: string;
-  body: string;
-  footer?: string;
-}
+import { Professor } from '../../types/types';
 
-interface ProfessorResultsProps {
-  professorName: string;
-  department: string;
-  courseCount: number;
-  rating: number;
-  difficulty: number;
-  takeAgainPercentage: number;
-  tags: string[];
-  comments: Comment[];
-}
-
-const ProfessorResults: React.FC<ProfessorResultsProps> = ({
-  professorName,
-  department,
-  courseCount,
-  rating,
-  difficulty,
-  takeAgainPercentage,
-  tags,
-  comments
+const ProfessorResults: React.FC<Professor> = ({
+    firstName,
+    lastName,
+    department,
+    numRatings,
+    rating,
+    difficulty,
+    takeAgainPercentage,
+    tags,
+    comments
 }) => {
   const circleRef = useRef<HTMLDivElement>(null);
 
@@ -61,9 +46,9 @@ const ProfessorResults: React.FC<ProfessorResultsProps> = ({
 
   return (
     <>
-      <h4 id="professor-stats">{professorName}</h4>
+      <h4 id="professor-stats">{firstName + ' ' + lastName}</h4>
       <h5 id="professor-stats-dep">{department}</h5>
-      <h6 id="professor-stats-num">{courseCount} courses</h6>
+      <h6 id="professor-stats-num">{numRatings} ratings</h6>
       <div className="box-container">
         <div className="box">
           <div className="avg-rating">
