@@ -19,6 +19,49 @@ const Popup: React.FC = () => {
     loadCachedData();
   }, []);
 
+  // listen for context menu messages
+  useEffect(() => {
+    const handleMessage = (request: any, sender: any, sendResponse: any) => {
+      try {
+        if (request.firstName || request.lastName) {
+          setFormData({
+            firstName: request.firstName || '',
+            lastName: request.lastName || ''
+          });
+          
+          // trigger search automatically if we have a school selected
+          if (selectedSchool) {
+            handleSearchSubmit(request.firstName || '', request.lastName || '');
+          }
+        }
+        if (sendResponse) {
+          sendResponse({ success: true });
+        }
+      } catch (error) {
+        console.error('Error handling context menu message:', error);
+        if (sendResponse) {
+          sendResponse({ success: false, error: error instanceof Error ? error.message : 'Unknown error' });
+        }
+      }
+    };
+
+    // Add message listener with error handling
+    try {
+      chrome.runtime.onMessage.addListener(handleMessage);
+    } catch (error) {
+      console.error('Error setting up message listener:', error);
+    }
+
+    // Cleanup listener on unmount
+    return () => {
+      try {
+        chrome.runtime.onMessage.removeListener(handleMessage);
+      } catch (error) {
+        console.error('Error removing message listener:', error);
+      }
+    };
+  }, [selectedSchool]); // Re-run when selectedSchool changes
+
   const loadCachedData = () => {
     // use cached school
     const storedSchool = localStorage.getItem('selectedSchool');
