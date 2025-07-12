@@ -1,29 +1,29 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 interface ProfessorSearchProps {
   onSubmit: (firstName: string, lastName: string) => void;
   onSchoolSelect: () => void;
   isLoading: boolean;
   selectedSchool: string;
+  formData: { firstName: string; lastName: string };
+  onFormDataChange: (firstName: string, lastName: string) => void;
 }
 
 const ProfessorSearch: React.FC<ProfessorSearchProps> = ({ 
   onSubmit, 
   onSchoolSelect, 
   isLoading,
-  selectedSchool
+  selectedSchool,
+  formData,
+  onFormDataChange
 }) => {
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(firstName, lastName);
+    onSubmit(formData.firstName, formData.lastName);
   };
 
   const handleSwap = () => {
-    setFirstName(lastName);
-    setLastName(firstName);
+    onFormDataChange(formData.lastName, formData.firstName);
   };
 
   return (
@@ -39,8 +39,8 @@ const ProfessorSearch: React.FC<ProfessorSearchProps> = ({
             <input 
               type="text" 
               id="first-name"
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
+              value={formData.firstName}
+              onChange={(e) => onFormDataChange(e.target.value, formData.lastName)}
               disabled={isLoading}
             />
           </div>
@@ -57,8 +57,8 @@ const ProfessorSearch: React.FC<ProfessorSearchProps> = ({
             <input 
               type="text" 
               id="last-name"
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
+              value={formData.lastName}
+              onChange={(e) => onFormDataChange(formData.firstName, e.target.value)}
               disabled={isLoading}
             />
           </div>
