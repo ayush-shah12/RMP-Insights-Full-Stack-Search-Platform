@@ -1,4 +1,5 @@
 import axios from 'axios';
+import qs from 'qs';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Professor } from '../types/types';
 import LoadingOverlay from './components/LoadingOverlay';
@@ -34,16 +35,22 @@ const Popup: React.FC = () => {
     setProfessorData(null); // clear old stats
 
     try {
-      const encoded = btoa(`school-${selectedSchoolId}`);
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}`, {
-        firstName,
-        lastName,
-        schoolId: selectedSchoolId,
-        schoolName: selectedSchool,
-        encoded: encoded
-      });
+      const encoded = btoa(`School-${selectedSchoolId}`);
 
-      const res = response.data;
+      const data = {
+        prof_first_name: firstName,
+        prof_last_name: lastName,
+        school_code: encoded,
+        force_refresh: false // allow users to choose to refresh cache? depends what the redis ttl is
+      }
+
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}`,
+        qs.stringify(data)
+      );
+
+      const res = response.data.data;
+
+      console.log(res);
 
       const professorData = {
         firstName: res.firstName,
@@ -52,22 +59,22 @@ const Popup: React.FC = () => {
         numRatings: res.numRatings,
         rating: res.avgRating,
         difficulty: res.avgDifficulty,
-        takeAgainPercentage: res.wouldTakeAgainPercent === "N/A" ? -1 : parseFloat(res.wouldTakeAgainPercent),
-        tags: res.tags.map((tag: any) => ({
-          tag: tag.tag
-        })),
-        comments: res.userCards.map((card: any) => ({
-          course: card.course,
-          date: card.date,
-          comment: card.comment,
-          wta: card.wta
-        }))
+        takeAgainPercentage: res.wouldTakeAgainPercent === -1 ? -1 : parseFloat(res.wouldTakeAgainPercent),
+        tags: res.tags,
+        comments: res.userCards
       }
 
       setProfessorData(professorData);
       saveToCache(professorData); // Save to cache
     } catch (err) {
-      setError('Failed to fetch professor data. Please try again.');
+
+      // TODO: fix how errors are sent from server
+      const errorMessage = axios.isAxiosError(err) ? err.response?.data?.error : 'Unknown error';
+      if (errorMessage.includes('No matching teacher found')){
+        setError(`Could not find Professor ${firstName} ${lastName} at ${selectedSchool}.`);
+      } else {
+        setError('Server Error: Failed to fetch professor data. Please try again.');
+      }
     } finally {
       setIsLoading(false);
       setIsFullScreenLoading(false);
@@ -152,16 +159,11 @@ const Popup: React.FC = () => {
           lastName: cachedData.lastName,
           department: cachedData.department,
           numRatings: cachedData.numRatings,
-          rating: cachedData.avgRating,
-          difficulty: cachedData.avgDifficulty,
-          takeAgainPercentage: cachedData.wouldTakeAgainPercent === "N/A" ? -1 : parseFloat(cachedData.wouldTakeAgainPercent),
+          rating: cachedData.rating,
+          difficulty: cachedData.difficulty,
+          takeAgainPercentage: cachedData.takeAgainPercentage === -1 ? -1 : parseFloat(cachedData.takeAgainPercentage),
           tags: cachedData.tags,
-          comments: cachedData.userCards.map((card: any) => ({
-            course: card.course,
-            date: card.date,
-            comment: card.comment,
-            wta: card.wta
-          }))
+          comments: cachedData.comments
         };
 
         setProfessorData(convertedData);
@@ -173,24 +175,19 @@ const Popup: React.FC = () => {
   };
 
   const saveToCache = (data: Professor) => {
-    const cachedData = {
-      firstName: data.firstName,
-      lastName: data.lastName,
-      avgRating: data.rating,
-      avgDifficulty: data.difficulty,
-      wouldTakeAgainPercent: data.takeAgainPercentage === -1 ? "N/A" : data.takeAgainPercentage.toString(),
-      userCards: data.comments.map(comment => ({
-        course: comment.course,
-        date: comment.date,
-        comment: comment.comment,
-        wta: comment.wta
-      })),
-      department: data.department,
-      numRatings: data.numRatings,
-      tags: data.tags
-    };
+    // const cachedData = {
+    //   firstName: data.firstName,
+    //   lastName: data.lastName,
+    //   avgRating: data.rating,
+    //   avgDifficulty: data.difficulty,
+    //   wouldTakeAgainPercent: data.takeAgainPercentage,
+    //   userCards: data.comments || [],
+    //   department: data.department,
+    //   numRatings: data.numRatings,
+    //   tags: data.tags
+    // };
 
-    localStorage.setItem('savedProfInfo', JSON.stringify(cachedData));
+    localStorage.setItem('savedProfInfo', JSON.stringify(data));
   };
 
   const handleFormDataChange = (firstName: string, lastName: string) => {
@@ -254,12 +251,7 @@ const Popup: React.FC = () => {
           difficulty={professorData.difficulty}
           takeAgainPercentage={professorData.takeAgainPercentage}
           tags={professorData.tags}
-          comments={professorData.comments.map(comment => ({
-            course: comment.course,
-            date: comment.date,
-            comment: comment.comment,
-            wta: comment.wta
-          }))}
+          comments={professorData.comments}
         />
       )}
       <LoadingOverlay isVisible={isFullScreenLoading} />
