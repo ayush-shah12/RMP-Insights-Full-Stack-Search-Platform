@@ -1,11 +1,11 @@
 import axios from 'axios';
+import qs from 'qs';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Professor } from '../types/types';
 import LoadingOverlay from './components/LoadingOverlay';
 import ProfessorResults from './components/ProfessorResults';
 import ProfessorSearch from './components/ProfessorSearch';
 import SchoolSelector from './components/SchoolSelector';
-import qs from 'qs';
 
 const Popup: React.FC = () => {
   const [currentView, setCurrentView] = useState<'search' | 'school'>('search');
@@ -67,7 +67,14 @@ const Popup: React.FC = () => {
       setProfessorData(professorData);
       saveToCache(professorData); // Save to cache
     } catch (err) {
-      setError('Failed to fetch professor data. Please try again.');
+
+      // TODO: fix how errors are sent from server
+      const errorMessage = axios.isAxiosError(err) ? err.response?.data?.error : 'Unknown error';
+      if (errorMessage.includes('No matching teacher found')){
+        setError(`Could not find professor ${firstName} ${lastName} at ${selectedSchool}.`);
+      } else {
+        setError('Server Error: Failed to fetch professor data. Please try again.');
+      }
     } finally {
       setIsLoading(false);
       setIsFullScreenLoading(false);
