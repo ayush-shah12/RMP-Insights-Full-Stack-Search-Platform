@@ -1,29 +1,32 @@
-import { test, expect } from './test-setup';
+import { expect, test } from './test-setup';
 
-test('Testing Basic UI (Selecting School/Autocomplete)', async ({ context, extensionId }) => {
+test('Testing Search Functionality', async ({ context, extensionId }) => {
+
   const page = await context.newPage();
 
-  await page.goto('chrome-extension://' + extensionId + '/popup.html');
+  await page.goto('chrome-extension://' + extensionId + '/index.html');
 
-  await page.click("a#school-link")
+  await page.click("div#school-link")
 
   await page.fill('input#school-input', 'Stony Brook University');
 
-  await page.waitForSelector("div#school-input-autocomplete-list");
+  await page.waitForSelector("div#autocomplete-list");
 
-  const suggestions = await page.locator('div#school-input-autocomplete-list > div');
+  const suggestions = page.locator('div#autocomplete-list > div');
+
+  // Check that the first suggestion contains the expected text
+  const firstSuggestionText = await suggestions.first().innerText();
+  expect(firstSuggestionText).toContain('Stony Brook University');
 
   // Click the first suggestion
   await suggestions.first().click();
-
-  await page.click('button#back-button');
 });
 
-
-test('Testing API call + display of data', async ({ context, extensionId }) => {
+// TODO: enable once updated backend is deployed
+test.skip('Testing backend call + display of data', async ({ context, extensionId }) => {
     const page = await context.newPage();
   
-    await page.goto('chrome-extension://' + extensionId + '/popup.html');
+    await page.goto('chrome-extension://' + extensionId + '/index.html');
   
     await page.click("a#school-link")
   
@@ -77,10 +80,11 @@ test('Testing API call + display of data', async ({ context, extensionId }) => {
 
   });
   
+
   test('Testing Error Handling/User Misinputs', async ({ context, extensionId }) => {
     const page = await context.newPage();
   
-    await page.goto('chrome-extension://' + extensionId + '/popup.html');
+    await page.goto('chrome-extension://' + extensionId + '/index.html');
 
     await page.fill('input#first-name', 'Paul');
 
@@ -88,26 +92,24 @@ test('Testing API call + display of data', async ({ context, extensionId }) => {
   
     await page.click('button#submit-button');
 
-    await expect(page.locator('#error-text')).toBeVisible();
+    await expect(page.locator('.error-text')).toBeVisible();
 
     await page.fill('input#first-name', '');
 
     await page.fill('input#last-name', '');
 
-    await page.click("a#school-link")
-  
+    await page.click("div#school-link")
+
     await page.fill('input#school-input', 'Stony Brook University');
   
-    await page.waitForSelector("div#school-input-autocomplete-list");
-  
-    const suggestions1 = await page.locator('div#school-input-autocomplete-list > div');
+    await page.waitForSelector("div#autocomplete-list");
+
+    const suggestions1 = await page.locator('div#autocomplete-list > div');
   
     await suggestions1.first().click();
   
-    await page.click('button#back-button');
-
     await page.click('button#submit-button');
 
-    await expect(page.locator('#error-text')).toBeVisible();
+    await expect(page.locator('.error-text')).toBeVisible();
 
   });
