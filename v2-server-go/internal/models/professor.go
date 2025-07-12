@@ -19,7 +19,7 @@ type ProfessorInfo struct {
 	AvgDifficulty         *float64  `json:"avgDifficulty,omitempty"`
 	WouldTakeAgainPercent *string   `json:"wouldTakeAgainPercent,omitempty"`
 	Department            *string   `json:"department,omitempty"`
-	NumRatings            *int      `json:"num_ratings,omitempty"`
+	NumRatings            *int      `json:"numRatings,omitempty"`
 	UserCards             []Comment `json:"userCards"`
 	Tags                  []Tag     `json:"tags"`
 }
