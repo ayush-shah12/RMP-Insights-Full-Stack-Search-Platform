@@ -30,8 +30,7 @@ query SearchTeachers($query: TeacherSearchQuery!) {
       }
     }
   }
-}
-`
+}`
 
 	TeacherRatingsQueryString = `
 query TeacherRatingsPageQuery($id: ID!) {
@@ -47,24 +46,57 @@ query TeacherRatingsPageQuery($id: ID!) {
       avgDifficulty
       wouldTakeAgainPercent
       numRatings
+      school {
+        id
+        legacyId
+        name
+        city
+        state
+      }
+      ratingsDistribution {
+        total
+        r1
+        r2
+        r3
+        r4
+        r5
+      }
       ratings(first: 20) {
         edges {
           node {
+            id
+            legacyId
             class
             comment
             date
+            helpfulRating
+            clarityRating
+            difficultyRating
             wouldTakeAgain
+            grade
+            attendanceMandatory
+            textbookUse
+            isForOnlineClass
+            isForCredit
+            ratingTags
+            thumbsUpTotal
+            thumbsDownTotal
           }
+        }
+        pageInfo {
+          hasNextPage
+          endCursor
         }
       }
       teacherRatingTags {
+        id
+        legacyId
         tagName
         tagCount
       }
     }
   }
-}
-`
+}`
 )
 
 type RMPService struct {
