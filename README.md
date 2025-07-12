@@ -50,13 +50,13 @@ Install on the Chrome Store:
 If you have any feedback, please reach out to us at rmpextension.dev@gmail.com
 
 
-## Tech Stack
+## 🔁 Versions
 
-**Client:** HTML, CSS, JS
+**v1**
+- Client: Vanilla JS
+- Server: Python
 
-**Server:** PYTHON, FASTAPI, BEAUTIFUL SOUP, REQUESTS
-
-**API:** Reverse-engineered GraphQL API
-
-**Cloud Deployment:** Heroku
+**v2**
+- Client: React + TypeScript
+- Server: Go + Redis (caching)
 
