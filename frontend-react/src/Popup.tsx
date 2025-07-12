@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Professor } from '../types/types';
 import LoadingOverlay from './components/LoadingOverlay';
@@ -150,44 +151,69 @@ const Popup: React.FC = () => {
     setProfessorData(null); // clear old stats
 
     try {
-      // fake call
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}`, {
+        firstName,
+        lastName,
+        schoolId: selectedSchool
+      });
+
+      const res = response.data;
+
+      const professorData = {
+        firstName: res.firstName,
+        lastName: res.lastName,
+        department: res.department,
+        numRatings: res.numRatings,
+        rating: res.avgRating,
+        difficulty: res.avgDifficulty,
+        takeAgainPercentage: res.wouldTakeAgainPercent === "N/A" ? -1 : parseFloat(res.wouldTakeAgainPercent),
+        tags: res.tags.map((tag: any) => ({
+          tag: tag.tag
+        })),
+        comments: res.userCards.map((card: any) => ({
+          course: card.course,
+          date: card.date,
+          comment: card.comment,
+          wta: card.wta
+        }))
+      }
+
 
       // fake data
-      const mockData: Professor = {
-        firstName: "Praveen",
-        lastName: "Tripathi",
-        department: 'Department of Computer Science',
-        numRatings: 5,
-        rating: 4.2,
-        difficulty: 3.8,
-        takeAgainPercentage: 85,
-        tags: [
-            {
-                tag: 'Clear lectures' // potentially add count of tags?
-            },
-            {
-                tag: 'Helpful',
-            }
-        ],
-        comments: [
-          {
-            course: 'CS 61A',
-            date: '2023-12-15',
-            comment: 'Great professor! Very clear explanations and helpful office hours.',
-            wta: 'Yes'
-          },
-          {
-            course: 'CS 61B',
-            date: '2023-11-20',
-            comment: 'Challenging but fair. Learned a lot in this class.',
-            wta: 'Yes'
-          }
-        ]
-      };
+      // const professorData: Professor = {
+      //   firstName: "Praveen",
+      //   lastName: "Tripathi",
+      //   department: 'Department of Computer Science',
+      //   numRatings: response.status,
+      //   rating: 4.2,
+      //   difficulty: 3.8,
+      //   takeAgainPercentage: 85,
+      //   tags: [
+      //       {
+      //           tag: 'Clear lectures' // potentially add count of tags?
+      //       },
+      //       {
+      //           tag: 'Helpful',
+      //       }
+      //   ],
+      //   comments: [
+      //     {
+      //       course: 'CS 61A',
+      //       date: '2023-12-15',
+      //       comment: 'Great professor! Very clear explanations and helpful office hours.',
+      //       wta: 'Yes'
+      //     },
+      //     {
+      //       course: 'CS 61B',
+      //       date: '2023-11-20',
+      //       comment: 'Challenging but fair. Learned a lot in this class.',
+      //       wta: 'Yes'
+      //     }
+      //   ]
+      // };
 
-      setProfessorData(mockData);
-      saveToCache(mockData); // Save to cache
+      setProfessorData(professorData);
+      saveToCache(professorData); // Save to cache
     } catch (err) {
       setError('Failed to fetch professor data. Please try again.');
     } finally {
