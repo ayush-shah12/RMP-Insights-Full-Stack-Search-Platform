@@ -1,11 +1,5 @@
 import React from 'react';
-
-interface Comment {
-  course: string;
-  date: string;
-  body: string;
-  footer?: string;
-}
+import { Comment } from '../../types/types';
 
 interface CommentsSectionProps {
   comments: Comment[];
@@ -23,8 +17,8 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({ comments }) => {
               <span className="course">{comment.course}</span>
               <span className="date">{comment.date}</span>
             </div>
-            <div className="comment-body">{comment.body}</div>
-            {comment.footer && <div className="comment-footer">{comment.footer}</div>}
+            <div className="comment-body">{comment.comment}</div>
+            {comment.wta && <div className="comment-footer">{comment.wta}</div>}
           </div>
         ))}
       </div>

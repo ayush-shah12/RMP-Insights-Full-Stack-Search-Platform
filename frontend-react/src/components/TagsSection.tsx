@@ -1,7 +1,8 @@
 import React from 'react';
+import { Tag } from '../../types/types';
 
 interface TagsSectionProps {
-  tags: string[];
+  tags: Tag[];
 }
 
 const TagsSection: React.FC<TagsSectionProps> = ({ tags }) => {
@@ -15,7 +16,7 @@ const TagsSection: React.FC<TagsSectionProps> = ({ tags }) => {
       <div id="tags" className="tag-container">
         {tags.map((tag, index) => (
           <span key={index} className="tag">
-            {tag}
+            {tag.tag}
           </span>
         ))}
       </div>
