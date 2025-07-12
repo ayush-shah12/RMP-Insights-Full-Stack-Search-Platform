@@ -21,7 +21,8 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build && npm run copy-extension-files",
-    "copy-extension-files": "copy chrome\\background.js .\\build\\background.js && copy chrome\\rightClickReceiver.js .\\build\\rightClickReceiver.js && copy chrome\\manifest.json .\\build\\manifest.json",
+    "copy-extension-files": "cp chrome/background.js build/background.js && cp chrome/rightClickReceiver.js build/rightClickReceiver.js && cp chrome/manifest.json build/manifest.json",
+    "copy-extension-files-windows": "copy chrome\\background.js .\\build\\background.js && copy chrome\\rightClickReceiver.js .\\build\\rightClickReceiver.js && copy chrome\\manifest.json .\\build\\manifest.json", 
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
