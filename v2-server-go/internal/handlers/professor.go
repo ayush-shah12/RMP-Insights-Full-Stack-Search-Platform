@@ -30,7 +30,6 @@ func (h *ProfessorHandler) GetProfessorInfo(c *fiber.Ctx) error {
 	schoolCode := c.FormValue("school_code")
 	forceRefresh := c.FormValue("force_refresh") == "true"
 
-
 	if profFirstName == "" && profLastName == "" {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error": "At least one of prof_first_name or prof_last_name is required",
@@ -41,13 +40,6 @@ func (h *ProfessorHandler) GetProfessorInfo(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error": "school_code is required",
 		})
-	}
-
-	if profFirstName == "" {
-		profFirstName = "Unknown"
-	}
-	if profLastName == "" {
-		profLastName = "Unknown"
 	}
 
 	log.Printf("Searching for professor: %s %s at school %s", profFirstName, profLastName, schoolCode)
