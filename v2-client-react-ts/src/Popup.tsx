@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Professor } from '../types/types';
 import LoadingOverlay from './components/LoadingOverlay';
 import ProfessorResults from './components/ProfessorResults';
@@ -15,6 +15,64 @@ const Popup: React.FC = () => {
   const [professorData, setProfessorData] = useState<Professor| null>(null);
   const [error, setError] = useState<string>('');
   const [formData, setFormData] = useState({ firstName: '', lastName: '' });
+
+  const handleSearchSubmit = useCallback(async (firstName: string, lastName: string) => {
+    // check if at least one name is entered
+    if (!firstName.trim() && !lastName.trim()) {
+      setError('Please enter at least a first name or last name.');
+      return;
+    }
+
+    if (!selectedSchool || !selectedSchoolId) {
+      setError('Please select a school first');
+      return;
+    }
+
+    setIsLoading(true);
+    setIsFullScreenLoading(true);
+    setError('');
+    setProfessorData(null); // clear old stats
+
+    try {
+      const encoded = btoa(`school-${selectedSchoolId}`);
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}`, {
+        firstName,
+        lastName,
+        schoolId: selectedSchoolId,
+        schoolName: selectedSchool,
+        encoded: encoded
+      });
+
+      const res = response.data;
+
+      const professorData = {
+        firstName: res.firstName,
+        lastName: res.lastName,
+        department: res.department,
+        numRatings: res.numRatings,
+        rating: res.avgRating,
+        difficulty: res.avgDifficulty,
+        takeAgainPercentage: res.wouldTakeAgainPercent === "N/A" ? -1 : parseFloat(res.wouldTakeAgainPercent),
+        tags: res.tags.map((tag: any) => ({
+          tag: tag.tag
+        })),
+        comments: res.userCards.map((card: any) => ({
+          course: card.course,
+          date: card.date,
+          comment: card.comment,
+          wta: card.wta
+        }))
+      }
+
+      setProfessorData(professorData);
+      saveToCache(professorData); // Save to cache
+    } catch (err) {
+      setError('Failed to fetch professor data. Please try again.');
+    } finally {
+      setIsLoading(false);
+      setIsFullScreenLoading(false);
+    }
+  }, [selectedSchool, selectedSchoolId]);
 
   // load cached data on mount
   useEffect(() => {
@@ -62,7 +120,7 @@ const Popup: React.FC = () => {
         console.error('Error removing message listener:', error);
       }
     };
-  }, [selectedSchool]); // Re-run when selectedSchool changes
+  }, [selectedSchool, selectedSchoolId, handleSearchSubmit]);
 
   const loadCachedData = () => {
     // use cached school
@@ -133,98 +191,6 @@ const Popup: React.FC = () => {
     };
 
     localStorage.setItem('savedProfInfo', JSON.stringify(cachedData));
-  };
-
-  const handleSearchSubmit = async (firstName: string, lastName: string) => {
-    // check if at least one name is entered
-    if (!firstName.trim() && !lastName.trim()) {
-      setError('Please enter at least a first name or last name.');
-      return;
-    }
-
-    if (!selectedSchool || !selectedSchoolId) {
-      setError('Please select a school first');
-      return;
-    }
-
-    setIsLoading(true);
-    setIsFullScreenLoading(true);
-    setError('');
-    setProfessorData(null); // clear old stats
-
-    try {
-      const encoded = btoa(`school-${selectedSchoolId}`);
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}`, {
-        firstName,
-        lastName,
-        schoolId: selectedSchoolId,
-        schoolName: selectedSchool,
-        encoded: encoded
-      });
-
-      const res = response.data;
-
-      const professorData = {
-        firstName: res.firstName,
-        lastName: res.lastName,
-        department: res.department,
-        numRatings: res.numRatings,
-        rating: res.avgRating,
-        difficulty: res.avgDifficulty,
-        takeAgainPercentage: res.wouldTakeAgainPercent === "N/A" ? -1 : parseFloat(res.wouldTakeAgainPercent),
-        tags: res.tags.map((tag: any) => ({
-          tag: tag.tag
-        })),
-        comments: res.userCards.map((card: any) => ({
-          course: card.course,
-          date: card.date,
-          comment: card.comment,
-          wta: card.wta
-        }))
-      }
-
-
-      // fake data
-      // const professorData: Professor = {
-      //   firstName: "Praveen",
-      //   lastName: "Tripathi",
-      //   department: 'Department of Computer Science',
-      //   numRatings: response.status,
-      //   rating: 4.2,
-      //   difficulty: 3.8,
-      //   takeAgainPercentage: 85,
-      //   tags: [
-      //       {
-      //           tag: 'Clear lectures' // potentially add count of tags?
-      //       },
-      //       {
-      //           tag: 'Helpful',
-      //       }
-      //   ],
-      //   comments: [
-      //     {
-      //       course: 'CS 61A',
-      //       date: '2023-12-15',
-      //       comment: 'Great professor! Very clear explanations and helpful office hours.',
-      //       wta: 'Yes'
-      //     },
-      //     {
-      //       course: 'CS 61B',
-      //       date: '2023-11-20',
-      //       comment: 'Challenging but fair. Learned a lot in this class.',
-      //       wta: 'Yes'
-      //     }
-      //   ]
-      // };
-
-      setProfessorData(professorData);
-      saveToCache(professorData); // Save to cache
-    } catch (err) {
-      setError('Failed to fetch professor data. Please try again.');
-    } finally {
-      setIsLoading(false);
-      setIsFullScreenLoading(false);
-    }
   };
 
   const handleFormDataChange = (firstName: string, lastName: string) => {
