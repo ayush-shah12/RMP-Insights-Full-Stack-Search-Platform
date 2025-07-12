@@ -14,11 +14,11 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({ comments }) => {
         {comments.map((comment, index) => (
           <div key={index} className="comment">
             <div className="comment-header">
-              <span className="course">{comment.course}</span>
-              <span className="date">{comment.date}</span>
+              <span className="course">{comment.course || "N/A"}</span>
+              <span className="date">{comment.date || "N/A"}</span>
             </div>
-            <div className="comment-body">{comment.comment}</div>
-            {comment.wta && <div className="comment-footer">{comment.wta}</div>}
+            <div className="comment-body">{comment.comment || "N/A"}</div>
+            {comment.wta && <div className="comment-footer">{comment.wta || "N/A"}</div>}
           </div>
         ))}
       </div>

@@ -53,14 +53,14 @@ const ProfessorResults: React.FC<Professor> = ({
         <div className="box">
           <div className="avg-rating">
             <h2 id="avg-rating-num">
-              <span id="rating-value">{rating.toFixed(1)}</span>
+              <span id="rating-value">{rating ? rating.toFixed(1) : "N/A"}</span>
               <sup>/5</sup>
             </h2>
             <p>Rating</p>
           </div>
           <div className="avg-difficulty">
             <h2 id="avg-difficulty-num">
-              <span id="difficulty-value">{difficulty.toFixed(1)}</span>
+              <span id="difficulty-value">{difficulty ? difficulty.toFixed(1) : "N/A"}</span>
               <sup>/5</sup>
             </h2>
             <p>Difficulty</p>
@@ -81,8 +81,8 @@ const ProfessorResults: React.FC<Professor> = ({
           </div>
         </div>
       </div>
-      <TagsSection tags={tags} />
-      <CommentsSection comments={comments} />
+      <TagsSection tags={tags || []} />
+      <CommentsSection comments={comments || []} />
     </>
   );
 };
