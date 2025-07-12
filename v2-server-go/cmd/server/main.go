@@ -48,7 +48,7 @@ func main() {
 		})
 	})
 
-	app.Get("/get_professor_info", professorHandler.GetProfessorInfo)
+	app.Post("/get_professor_info", professorHandler.GetProfessorInfo)
 
 	app.Get("/health", professorHandler.HealthCheck)
 
