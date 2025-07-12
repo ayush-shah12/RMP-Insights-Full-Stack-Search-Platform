@@ -17,7 +17,7 @@ type ProfessorInfo struct {
 	LegacyId              *string   `json:"legacyId,omitempty"`
 	AvgRating             *float64  `json:"avgRating,omitempty"`
 	AvgDifficulty         *float64  `json:"avgDifficulty,omitempty"`
-	WouldTakeAgainPercent *string   `json:"wouldTakeAgainPercent,omitempty"`
+	WouldTakeAgainPercent *float64  `json:"wouldTakeAgainPercent,omitempty"` // -1 will denote not available
 	Department            *string   `json:"department,omitempty"`
 	NumRatings            *int      `json:"numRatings,omitempty"`
 	UserCards             []Comment `json:"userCards"`

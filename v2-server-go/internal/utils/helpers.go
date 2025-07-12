@@ -1,15 +1,18 @@
 package utils
 
 import (
-	"fmt"
+	// "fmt"
 	"strconv"
 
 	"github.com/ayushshah12/rmp-insights-full-stack-search-platform/rmp-server/internal/models"
 )
 
 func ConvertToWTAString(wta *int) *string {
+	// return "N/A" rather than nil to enforce types
+
 	if wta == nil {
-		return nil
+		res := "N/A"
+		return &res
 	}
 	switch *wta {
 	case 1:
@@ -19,18 +22,20 @@ func ConvertToWTAString(wta *int) *string {
 		result := "No"
 		return &result
 	default:
-		return nil
+		result := "N/A"
+		return &result
 	}
 }
 
 func ConvertTeacherToProfessorInfo(teacher models.TeacherDetails) *models.ProfessorInfo {
 	legacyIdStr := strconv.Itoa(teacher.LegacyId)
 
-	var wtaPercentStr string
+	// if wta percentage is not available, set to -1.0
+	var wtaPercentStr float64
 	if teacher.WouldTakeAgainPercent >= 0 && teacher.WouldTakeAgainPercent <= 100 {
-		wtaPercentStr = fmt.Sprintf("%.1f", teacher.WouldTakeAgainPercent)
+		wtaPercentStr = teacher.WouldTakeAgainPercent
 	} else {
-		wtaPercentStr = "N/A"
+		wtaPercentStr = -1.0
 	}
 
 	var userCards []models.Comment
