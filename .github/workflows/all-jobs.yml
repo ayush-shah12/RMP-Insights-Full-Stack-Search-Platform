@@ -44,15 +44,15 @@ jobs:
           node-version: lts/*
       - name: Install dependencies
         run: |
-          cd frontend-react
+          cd v2-client-react-ts
           npm ci
       - name: Build
         run: |
-          cd frontend-react
+          cd v2-client-react-ts
           npm run build
       - uses: vimtor/action-zip@v1.2
         with:
-          files: frontend-react/build/
+          files: v2-client-react-ts/build/
           dest: build.zip
       - name: Upload to Chrome Web Store
         uses: mobilefirstllc/cws-publish@latest
@@ -65,5 +65,5 @@ jobs:
           zip_file: build.zip
       - uses: actions/upload-artifact@v4
         with:
-          name: loggingFrontendZipFile 
+          name: v2ClientReactTsZipFile
           path: build.zip
