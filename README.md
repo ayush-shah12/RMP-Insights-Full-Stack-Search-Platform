@@ -58,8 +58,12 @@ If you have any feedback, please reach out to us at rmpextension.dev@gmail.com
 **v1**
 - Client: Vanilla JS
 - Server: Python
+- Tests: E2E tests with Playwright
+- CI/CD: Automated testing, builds, and upload/publishing to Chrome Store
 
 **v2**
 - Client: React + TypeScript
 - Server: Go + Redis (caching)
+- Tests: E2E tests with Playwright and Go API tests
+- CI/CD: Automated testing, builds, and upload/publishing to Chrome Store
 
