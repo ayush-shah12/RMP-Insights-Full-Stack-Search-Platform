@@ -2,9 +2,9 @@ import React, { useEffect, useRef } from 'react';
 import CommentsSection from './CommentsSection';
 import TagsSection from './TagsSection';
 
-import { Professor } from '../../types/types';
+import { ProfessorResultsProps } from '../../types/types';
 
-const ProfessorResults: React.FC<Professor> = ({
+const ProfessorResults: React.FC<ProfessorResultsProps> = ({
     firstName,
     lastName,
     department,
@@ -13,7 +13,10 @@ const ProfessorResults: React.FC<Professor> = ({
     difficulty,
     takeAgainPercentage,
     tags,
-    comments
+    comments,
+    lastUpdated,
+    onRefresh,
+    isLoading
 }) => {
   const circleRef = useRef<HTMLDivElement>(null);
 
@@ -44,11 +47,41 @@ const ProfessorResults: React.FC<Professor> = ({
     }
   }, [takeAgainPercentage]);
 
+  const formatLastUpdated = (lastUpdated: string) => {
+    
+    const date = new Date(lastUpdated);
+    const now = new Date();
+
+    const diffMs = now.getTime() - date.getTime();
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMins / 60);
+    const diffDays = Math.floor(diffHours / 24);
+    
+    if (diffMins < 1) return 'Now';
+    if (diffMins < 60) return `${diffMins}m ago`;
+    if (diffHours < 24) return `${diffHours}h ago`;
+    
+    return `${diffDays}d ago`;
+  };
+
   return (
     <>
-      <h4 id="professor-stats">{firstName + ' ' + lastName}</h4>
-      <h5 id="professor-stats-dep">{department}</h5>
-      <h6 id="professor-stats-num">{numRatings} ratings</h6>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+        <div>
+          <h4 id="professor-stats" style={{ margin: '0' }}>{firstName + ' ' + lastName}</h4>
+          <h5 id="professor-stats-dep" style={{ margin: '0' }}>{department}</h5>
+        </div>
+        <div className="last-updated-container" style={{ flexDirection: 'column', alignItems: 'flex-end', border: 'none', padding: '0', minWidth: 'fit-content' }}>
+          <span style={{ marginBottom: '4px' }}>Last Updated: {formatLastUpdated(lastUpdated)}</span>
+          <button 
+            onClick={onRefresh}
+            disabled={isLoading}
+          >
+            {isLoading ? '⟳' : '↻'} Refresh
+          </button>
+        </div>
+      </div>
+      <h6 id="professor-stats-num" style={{ marginTop: '5px', marginBottom: '0' }}>{numRatings} ratings</h6>
       <div className="box-container">
         <div className="box">
           <div className="avg-rating">
