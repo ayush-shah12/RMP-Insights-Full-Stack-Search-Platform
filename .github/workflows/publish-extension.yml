@@ -1,7 +1,7 @@
 name: Upload to Chrome Store
 on:
   push:
-    branches: [ 'main' ]
+    branches: [ 'master' ]
     paths:
       - 'v2-client-react-ts/**'
 jobs:
