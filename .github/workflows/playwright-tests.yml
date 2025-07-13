@@ -2,11 +2,16 @@ name: Run Playwright Tests
 on:
   push:
     branches: [ '*' ]
+    paths:
+      - 'tests/e2e/**'
+      - 'v2-client-react-ts/**'
+      - '.github/workflows/playwright-tests.yml'
   pull_request:
     branches: [ '*' ]
     paths:
       - 'tests/e2e/**'
       - 'v2-client-react-ts/**'
+      - '.github/workflows/playwright-tests.yml'
 jobs:
   test:
     timeout-minutes: 5
