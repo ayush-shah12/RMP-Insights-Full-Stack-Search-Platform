@@ -1,7 +1,9 @@
 
 # Rate My Professor Extension(Any University, Any Website)
 
-![example workflow](https://github.com/ayush-shah12/RMP-Insights-Full-Stack-Search-Platform/actions/workflows/all-jobs.yml/badge.svg)
+[![Run Playwright Tests](https://github.com/ayush-shah12/RMP-Insights-Full-Stack-Search-Platform/actions/workflows/playwright-tests.yml/badge.svg)](https://github.com/ayush-shah12/RMP-Insights-Full-Stack-Search-Platform/actions/workflows/playwright-tests.yml)
+        [![Upload to Chrome Store](https://github.com/ayush-shah12/RMP-Insights-Full-Stack-Search-Platform/actions/workflows/publish-extension.yml/badge.svg)](https://github.com/ayush-shah12/RMP-Insights-Full-Stack-Search-Platform/actions/workflows/publish-extension.yml)
+
 
 
 Tired of juggling multiple RateMyProfessors tabs while planning your courses? Our Chrome extension is here to make your life easier!
