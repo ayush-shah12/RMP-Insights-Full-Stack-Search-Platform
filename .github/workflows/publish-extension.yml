@@ -1,0 +1,49 @@
+name: Upload to Chrome Store
+on:
+  push:
+    branches: [ 'main' ]
+    paths:
+      - 'v2-client-react-ts/**'
+jobs:
+  zip-files:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+      - name: Install dependencies
+        run: |
+          cd v2-client-react-ts
+          npm ci
+      - name: Build
+        run: |
+          cd v2-client-react-ts
+          npm run build
+      - uses: vimtor/action-zip@v1.2
+        with:
+          files: v2-client-react-ts/build/
+          dest: build.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: build-zip-file
+          path: build.zip
+
+  upload-to-chrome-store:
+    runs-on: ubuntu-latest
+    needs: zip-files
+    steps:
+      - name: Download build zip file
+        uses: actions/download-artifact@v4
+        with:
+          name: build-zip-file
+          
+      - name: Upload to Chrome Web Store
+        uses: mobilefirstllc/cws-publish@latest
+        with:
+          action: 'upload'
+          client_id: ${{ secrets.CLIENT_ID }}
+          client_secret: ${{ secrets.SECRET }}
+          refresh_token: ${{ secrets.REFRESH_TOKEN }}
+          extension_id: ${{ secrets.EXTENSION_ID }}
+          zip_file: build.zip
