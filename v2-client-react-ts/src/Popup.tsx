@@ -50,8 +50,6 @@ const Popup: React.FC = () => {
 
       const res = response.data.data;
 
-      console.log(res);
-
       const professorData = {
         firstName: res.firstName,
         lastName: res.lastName,

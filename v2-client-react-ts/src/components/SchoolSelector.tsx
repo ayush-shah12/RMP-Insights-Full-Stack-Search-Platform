@@ -49,7 +49,6 @@ const SchoolSelector: React.FC<SchoolSelectorProps> = ({
     setSearchTerm(school.name);
     setShowSuggestions(false);
     onSchoolSelect(school.name, school.id);
-    console.log(school.name, school.id);
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
