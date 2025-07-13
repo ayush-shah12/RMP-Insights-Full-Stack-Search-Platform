@@ -3,6 +3,7 @@
 
 [![Run Playwright Tests](https://github.com/ayush-shah12/RMP-Insights-Full-Stack-Search-Platform/actions/workflows/playwright-tests.yml/badge.svg)](https://github.com/ayush-shah12/RMP-Insights-Full-Stack-Search-Platform/actions/workflows/playwright-tests.yml)
         [![Upload to Chrome Store](https://github.com/ayush-shah12/RMP-Insights-Full-Stack-Search-Platform/actions/workflows/publish-extension.yml/badge.svg)](https://github.com/ayush-shah12/RMP-Insights-Full-Stack-Search-Platform/actions/workflows/publish-extension.yml)
+                [![Deployed on Heroku](https://img.shields.io/badge/deployed-Heroku-430098?logo=heroku&logoColor=white)](https://rmp-server-go-69d9e72e86ec.herokuapp.com/)
 
 
 
