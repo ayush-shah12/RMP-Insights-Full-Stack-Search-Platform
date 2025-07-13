@@ -4,6 +4,7 @@ on:
     branches: [ 'master' ]
     paths:
       - 'v2-client-react-ts/**'
+      - '.github/workflows/publish-extension.yml'
 jobs:
   zip-files:
     runs-on: ubuntu-latest
@@ -22,6 +23,7 @@ jobs:
           npm run build
         env:
           REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
+          GENERATE_SOURCEMAP: ${{ secrets.GENERATE_SOURCEMAP }}
       - uses: vimtor/action-zip@v1.2
         with:
           files: v2-client-react-ts/build/
