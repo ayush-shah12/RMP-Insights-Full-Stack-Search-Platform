@@ -20,6 +20,8 @@ jobs:
         run: |
           cd v2-client-react-ts
           npm run build
+        env:
+          REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
       - uses: vimtor/action-zip@v1.2
         with:
           files: v2-client-react-ts/build/
