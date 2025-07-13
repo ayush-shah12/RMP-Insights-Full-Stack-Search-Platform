@@ -22,6 +22,7 @@ type ProfessorInfo struct {
 	NumRatings            *int      `json:"numRatings,omitempty"`
 	UserCards             []Comment `json:"userCards"`
 	Tags                  []Tag     `json:"tags"`
+	LastUpdated           *string   `json:"lastUpdated,omitempty"`
 }
 
 type SearchQuery struct {

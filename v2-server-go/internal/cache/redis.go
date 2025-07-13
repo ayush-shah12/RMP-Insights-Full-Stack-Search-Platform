@@ -16,7 +16,7 @@ import (
 var ctx = context.Background()
 
 const (
-	CacheTTL       = 24 * time.Hour
+	CacheTTL       = 14 * 24 * time.Hour
 	CacheKeyPrefix = "rmp:professor:"
 )
 
@@ -71,6 +71,10 @@ func (r *RedisClient) GetProfessorFromCache(cacheKey string) (*models.ProfessorI
 }
 
 func (r *RedisClient) SetProfessorInCache(cacheKey string, professorInfo *models.ProfessorInfo) error {
+	// Set the current timestamp when caching
+	currentTime := time.Now().UTC().Format(time.RFC3339)
+	professorInfo.LastUpdated = &currentTime
+	
 	jsonData, err := json.Marshal(professorInfo)
 	if err != nil {
 		return err

@@ -17,7 +17,7 @@ const Popup: React.FC = () => {
   const [error, setError] = useState<string>('');
   const [formData, setFormData] = useState({ firstName: '', lastName: '' });
 
-  const handleSearchSubmit = useCallback(async (firstName: string, lastName: string) => {
+  const handleSearchSubmit = useCallback(async (firstName: string, lastName: string, forceRefresh = false) => {
     // check if at least one name is entered
     if (!firstName.trim() && !lastName.trim()) {
       setError('Please enter at least a first name or last name.');
@@ -41,7 +41,7 @@ const Popup: React.FC = () => {
         prof_first_name: firstName,
         prof_last_name: lastName,
         school_code: encoded,
-        force_refresh: false // allow users to choose to refresh cache? depends what the redis ttl is
+        force_refresh: forceRefresh
       }
 
       const response = await axios.post(`${process.env.REACT_APP_API_URL}`,
@@ -61,7 +61,8 @@ const Popup: React.FC = () => {
         difficulty: res.avgDifficulty,
         takeAgainPercentage: res.wouldTakeAgainPercent === -1 ? -1 : parseFloat(res.wouldTakeAgainPercent),
         tags: res.tags,
-        comments: res.userCards
+        comments: res.userCards,
+        lastUpdated: res.lastUpdated
       }
 
       setProfessorData(professorData);
@@ -80,6 +81,12 @@ const Popup: React.FC = () => {
       setIsFullScreenLoading(false);
     }
   }, [selectedSchool, selectedSchoolId]);
+
+  const handleRefresh = useCallback(() => {
+    if (formData.firstName || formData.lastName) {
+      handleSearchSubmit(formData.firstName, formData.lastName, true);
+    }
+  }, [formData.firstName, formData.lastName, handleSearchSubmit]);
 
   // load cached data on mount
   useEffect(() => {
@@ -163,7 +170,8 @@ const Popup: React.FC = () => {
           difficulty: cachedData.difficulty,
           takeAgainPercentage: cachedData.takeAgainPercentage === -1 ? -1 : parseFloat(cachedData.takeAgainPercentage),
           tags: cachedData.tags,
-          comments: cachedData.comments
+          comments: cachedData.comments,
+          lastUpdated: cachedData.lastUpdated
         };
 
         setProfessorData(convertedData);
@@ -252,6 +260,9 @@ const Popup: React.FC = () => {
           takeAgainPercentage={professorData.takeAgainPercentage}
           tags={professorData.tags}
           comments={professorData.comments}
+          lastUpdated={professorData.lastUpdated}
+          onRefresh={handleRefresh}
+          isLoading={isLoading}
         />
       )}
       <LoadingOverlay isVisible={isFullScreenLoading} />
@@ -259,4 +270,4 @@ const Popup: React.FC = () => {
   );
 };
 
-export default Popup; 
+export default Popup;
