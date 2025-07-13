@@ -34,6 +34,7 @@ jobs:
           path: build.zip
 
   upload-to-chrome-store:
+    if: false
     runs-on: ubuntu-latest
     needs: zip-files
     steps:
