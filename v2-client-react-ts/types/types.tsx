@@ -19,6 +19,12 @@ export interface Professor {
     takeAgainPercentage: number; // enforce -1 if no data
     tags?: Array<Tag>;
     comments?: Array<Comment>;
+    lastUpdated: string;
+  }
+
+export interface ProfessorResultsProps extends Professor {
+    onRefresh?: () => void;
+    isLoading?: boolean;
   }
 
 export interface School {
